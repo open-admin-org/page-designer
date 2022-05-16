@@ -1,0 +1,21 @@
+.white-bg,
+.white-bg main#main {
+    background:#FFF;
+}
+section.content-header{
+    display:none;
+}
+
+main#main.p-4{
+    padding:0 !important;
+}
+
+.card .card-header{
+    display:none;
+}
+.card .navbar.form-footer .col-md-2{
+    display:none;
+}
+.card .navbar.form-footer .col-md-8{
+    width:100%;
+}

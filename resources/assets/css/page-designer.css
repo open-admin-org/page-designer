@@ -1,0 +1,21 @@
+.pds .item{
+    border:1px solid #CCC;
+    padding:10px;
+    margin-bottom:10px;
+}
+
+.pds #page .item{
+    position: absolute;
+}
+
+.pds #page.relative .item{
+    margin:0;
+    position: relative;
+}
+
+.pds #tips{
+    font-style:italic;
+    text-align: right;
+    line-height:1.9rem;
+    padding-right:0.5rem;
+}
