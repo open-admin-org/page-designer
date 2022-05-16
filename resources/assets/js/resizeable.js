@@ -72,7 +72,9 @@ class resizable {
 
             document.removeEventListener("mousemove", resizeX, false);
             document.removeEventListener("mousemove", resizeY, false);
-            ref.panel.dispatchEvent(resized_event);
+            if (typeof(ref.panel) != 'undefined'){
+                ref.panel.dispatchEvent(resized_event);
+            }
 
         }, false);
 

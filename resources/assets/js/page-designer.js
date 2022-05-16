@@ -125,7 +125,16 @@ class pageDesigner {
                 // minimum size
                 interact.modifiers.restrictSize({
                     min: { width: 100, height: 50 }
-                })
+                }),
+
+                interact.modifiers.snapSize({
+                    targets: [
+                        {width:50},
+                        this.getSnapGrid()
+                    ],
+                    range: Infinity,
+                    relativePoints: [ { x: 0, y: 0 } ]
+                }),
             ],
 
             inertia: true
@@ -148,19 +157,23 @@ class pageDesigner {
         })
     }
 
+    getSnapGrid = function(){
+        return interact.snappers.grid({x: 50, y: 50});
+    }
+
     initDrag = function(){
 
         var ref = this;
         var x = 0;
         var y = 0;
-        var gridTarget = interact.snappers.grid({x: 50, y: 50});
+
 
         interact(".drag")
         .draggable({
             modifiers: [
                 interact.modifiers.snap({
                     targets: [
-                        gridTarget
+                        this.getSnapGrid()
                     ],
                     range: Infinity,
                     relativePoints: [ { x: 0, y: 0 } ]
@@ -182,6 +195,12 @@ class pageDesigner {
             target.setAttribute('data-y', y);
             event.target.style.transform = 'translate(' + x + 'px, ' + y + 'px)'
         })
+        .on("dragend",function (event){
+            if (event.target.classList.contains("drop")){
+                ref.createNewElement(event);
+            }
+        })
+
     }
 
     initResizeable = function(){
@@ -210,6 +229,36 @@ class pageDesigner {
 /*-----------------------------------------------*/
 /* alter block functions */
 /*-----------------------------------------------*/
+
+    createNewElement = function (event){
+
+        var org = event.target;
+
+        var div = document.createElement("div");
+        div.setAttribute("id",this.makeid());
+        div.className = "item resize drag "+org.dataset.type;
+        div.innerHTML = org.dataset.type+'<a onclick="openItem(this,\''+org.dataset.type+'\');" class="icon-pencil-alt"></a>';
+
+        var diff = this.getDistanceBetweenElements(document.body,this.page);
+        console.log(diff);
+        console.log(event);
+
+
+
+
+        var x = event.rect.left + diff.x;
+        var y = event.rect.top + diff.y;
+        div.setAttribute('data-x', x);
+        div.setAttribute('data-y', y);
+        div.style.transform = 'translate(' + x + 'px, ' + y + 'px)'
+
+        this.page.appendChild(div);
+
+        event.target.setAttribute('data-x', 0);
+        event.target.setAttribute('data-y', 0);
+        event.target.style.transform = '';
+    }
+
 
     moveLowerItems = function(event,dir){
 

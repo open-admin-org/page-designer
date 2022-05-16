@@ -14,10 +14,10 @@
             <div class="card-body no-padding" style="position:relative;">
 
                 <div id="page"  style="border:1px solid #CCC;min-height:400px;">
-                    <div class="item resize drag drop image">images <a onclick="openItem(this,'images');" class="icon-pencil-alt"></a></div>
-                    <div class="item resize drag drop movie">movie <a onclick="openItem(this,'movie');" class="icon-pencil-alt"></a></div>
-                    <div class="item resize drag drop gallery">inline gallery <a onclick="openItem(this,'inline-gallery');" class="icon-pencil-alt"></a></div>
-                    <div class="item resize drag drop text">text <a onclick="openItem(this,'text');" class="icon-pencil-alt"></a></div>
+                    <div class="item resize drag image">images <a onclick="openItem(this,'images');" class="icon-pencil-alt"></a></div>
+                    <div class="item resize drag movie">movie <a onclick="openItem(this,'movie');" class="icon-pencil-alt"></a></div>
+                    <div class="item resize drag gallery">inline gallery <a onclick="openItem(this,'inline-gallery');" class="icon-pencil-alt"></a></div>
+                    <div class="item resize drag text">text <a onclick="openItem(this,'text');" class="icon-pencil-alt"></a></div>
                 </div>
 
                 <textarea id="data" style="min-height:300px;width:100%;">{"items":[{"id":"2P4BdzUTlF","x":434,"y":306,"width":123,"height":105},{"id":"h2KtFQwRyf","x":84,"y":106,"width":100,"height":132},{"id":"EozlMTgqsJ","x":534,"y":56,"width":162,"height":121},{"id":"bKwy6koZpX","x":234,"y":56,"width":218,"height":151}],"settings":{"height":488}}</textarea>
@@ -33,11 +33,11 @@
             </div>
             <div class="card-body no-padding">
 
-                    Drag me
-                    <div class="item drag drop image">image </div>
-                    <div class="item drag drop movie">movie</div>
-                    <div class="item drag drop gallery">gallery</div>
-                    <div class="item drag drop text">text</div>
+                Drag me
+                <div class="item drag drop image" data-type="image">image </div>
+                <div class="item drag drop movie" data-type="movie">movie</div>
+                <div class="item drag drop gallery" data-type="gallery">gallery</div>
+                <div class="item drag drop text" data-type="text">text</div>
 
             </div>
             <!-- /.card-body -->
@@ -116,14 +116,9 @@
         var url = pre+suf;
 
         document.getElementById("edit_model-iframe").setAttribute("src",url);
-
         editModal.show();
 
-
-
-
     }
-
 
     document.querySelector('.log-refresh').addEventListener('click', function() {
         admin.ajax.reload();
