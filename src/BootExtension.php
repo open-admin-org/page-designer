@@ -20,6 +20,7 @@ trait BootExtension
         Admin::js('/vendor/open-admin-ext/page-designer/js/resizeable.js');
         Admin::js('/vendor/open-admin-ext/page-designer/js/interact.min.js');
         Admin::js('/vendor/open-admin-ext/page-designer/js/page-designer.js');
+        Admin::js('/vendor/open-admin-ext/page-designer/js/page-designer-content.js');
     }
 
     /**
@@ -32,7 +33,7 @@ trait BootExtension
         parent::routes(function ($router) {
             /* @var \Illuminate\Routing\Router $router */
             $router->get('page-designer', 'OpenAdmin\Admin\PageDesigner\PageDesignerController@index')->name('page-designer-index');
-            $router->get('page-designer/{id}', 'OpenAdmin\Admin\PageDesigner\PageDesignerController@index')->name('page-designer-file');
+            $router->post('page-designer/save', 'OpenAdmin\Admin\PageDesigner\PageDesignerController@save')->name('page-designer-file');
         });
     }
 

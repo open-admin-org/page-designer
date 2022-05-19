@@ -1,11 +1,6 @@
-
 class pageDesigner {
 
     constructor(options = {}) {
-
-        var ref = this;
-        var page;
-
 
         if (typeof(options) == 'undefined'){
             options = {}
@@ -16,21 +11,24 @@ class pageDesigner {
             "page": "#page",
             "tips": "#tips",
             "item_class":".item",
+            "snap": 40,
+            "minSize": 80,
         }
-
         this.options = Object.assign({}, defaults, options);
-
+        this.options.snapGrid = interact.snappers.grid({x: this.options.snap, y: this.options.snap});
 
         this.initKeystate();
         this.initPage();
         this.initResize();
         this.initDrag();
+        this.initDrop();
         this.loadItemData();
         return this;
 
     }
 
-    initKeystate = function(){
+    initKeystate = function()
+    {
         var ref = this;
         this.shiftDown = false;
         document.addEventListener("keydown", function(evt){
@@ -45,7 +43,8 @@ class pageDesigner {
         });
     }
 
-    initPage = function (){
+    initPage = function ()
+    {
         var ref = this;
         this.app = document.querySelector(this.options.app);
         this.page = document.querySelector(this.options.page);
@@ -59,7 +58,8 @@ class pageDesigner {
 /* helpers */
 /*-----------------------------------------------*/
 
-    makeid = function(length = 10) {
+    makeid = function(length = 10)
+    {
         var result           = '';
         var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         var charactersLength = characters.length;
@@ -69,7 +69,12 @@ class pageDesigner {
        return result;
     }
 
-    tip = function(msg){
+    onlyNumbers = function(str) {
+        return /^[0-9]+$/.test(str);
+    }
+
+    tip = function(msg)
+    {
         this.tips.innerHTML = msg;
     }
 
@@ -77,8 +82,8 @@ class pageDesigner {
 /* interact events */
 /*-----------------------------------------------*/
 
-    initResize = function(){
-
+    initResize = function()
+    {
         var ref = this;
 
         interact('.resize')
@@ -100,11 +105,8 @@ class pageDesigner {
                     y += event.deltaRect.top
 
                     target.style.transform = 'translate(' + x + 'px,' + y + 'px)'
-
                     target.setAttribute('data-x', x)
                     target.setAttribute('data-y', y)
-                    //target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height)
-
 
                     if (ref.shiftDown){
                         if (event.edges.top){
@@ -124,17 +126,15 @@ class pageDesigner {
 
                 // minimum size
                 interact.modifiers.restrictSize({
-                    min: { width: 100, height: 50 }
+                    min: { width: this.options.minSize, height: this.options.minSize }
                 }),
 
                 interact.modifiers.snapSize({
                     targets: [
-                        {width:50},
-                        this.getSnapGrid()
+                      { width: this.options.snap, height: this.options.snap },
+                      this.options.snapGrid
                     ],
-                    range: Infinity,
-                    relativePoints: [ { x: 0, y: 0 } ]
-                }),
+                  }),
             ],
 
             inertia: true
@@ -157,26 +157,20 @@ class pageDesigner {
         })
     }
 
-    getSnapGrid = function(){
-        return interact.snappers.grid({x: 50, y: 50});
-    }
-
-    initDrag = function(){
-
+    initDrag = function()
+    {
         var ref = this;
         var x = 0;
         var y = 0;
-
 
         interact(".drag")
         .draggable({
             modifiers: [
                 interact.modifiers.snap({
                     targets: [
-                        this.getSnapGrid()
+                        ref.options.snapGrid
                     ],
-                    range: Infinity,
-                    relativePoints: [ { x: 0, y: 0 } ]
+                    offset: 'partent'
                 }),
                 interact.modifiers.restrict({
                     restriction: ref.page,
@@ -191,98 +185,185 @@ class pageDesigner {
             var y = (parseFloat(target.getAttribute('data-y')) || 0)
             x += event.dx;
             y += event.dy;
-            target.setAttribute('data-x', x);
-            target.setAttribute('data-y', y);
-            event.target.style.transform = 'translate(' + x + 'px, ' + y + 'px)'
+            var snapped = ref.options.snapGrid(x,y);
+            target.setAttribute('data-x', snapped.x);
+            target.setAttribute('data-y', snapped.y);
+            event.target.style.transform = 'translate(' + snapped.x + 'px, ' + snapped.y + 'px)'
         })
-        .on("dragend",function (event){
-            if (event.target.classList.contains("drop")){
-                ref.createNewElement(event);
+    }
+
+    initDrop = function()
+    {
+        var ref = this;
+        var dragged;
+
+        document.querySelectorAll(".drop").forEach(el =>{
+
+            /* events fired on the draggable target */
+            el.addEventListener("drag", function(event) {
+
+            }, false);
+
+            el.addEventListener("dragstart", function(event) {
+                // store a ref. on the dragged elem
+                dragged = event.target;
+                // make it half transparent
+                event.target.style.opacity = .5;
+            }, false);
+
+            el.addEventListener("dragend", function(event) {
+                // reset the transparency
+                event.target.style.opacity = "";
+            }, false);
+
+        })
+
+        /* events fired on the drop targets */
+        document.addEventListener("dragover", function(event) {
+            // prevent default to allow drop
+            event.preventDefault();
+        }, false);
+
+
+        document.addEventListener("dragenter", function(event) {
+            // highlight potential drop target when the draggable element enters it
+            if (event.target.classList.contains("dropzone")) {
+                event.target.classList.add("allow");
             }
-        })
+
+        }, false);
+
+        document.addEventListener("dragleave", function(event) {
+            // reset background of potential drop target when the draggable element leaves it
+            if (event.target.classList.contains("dropzone")) {
+                event.target.classList.remove("allow");
+            }
+
+        }, false);
+
+        document.addEventListener("drop", function(event) {
+            // prevent default action (open as link for some elements)
+            event.preventDefault();
+            // move dragged elem to the selected drop target
+            if (event.target.classList.contains("dropzone")) {
+                event.target.classList.remove("allow");
+                //dragged.parentNode.removeChild( dragged );
+                //var cloned = dragged.cloneNode();
+                //cloned.draggable = false;
+                //event.target.appendChild( cloned);
+                ref.createNewElement(event,dragged);
+            }
+        }, false);
 
     }
 
-    initResizeable = function(){
-        interact('.resizable')
-        .resizable({
-            edges: { top: true, left: true, bottom: true, right: true },
-            listeners: {
-                move: function (event) {
-                    let { x, y } = event.target.dataset
-
-                    x = (parseFloat(x) || 0) + event.deltaRect.left
-                    y = (parseFloat(y) || 0) + event.deltaRect.top
-
-                    Object.assign(event.target.style, {
-                        width: `${event.rect.width}px`,
-                        height: `${event.rect.height}px`,
-                        transform: `translate(${x}px, ${y}px)`
-                    })
-
-                    Object.assign(event.target.dataset, { x, y })
-                }
-            }
-        })
-    }
 
 /*-----------------------------------------------*/
 /* alter block functions */
 /*-----------------------------------------------*/
 
-    createNewElement = function (event){
+    createNewElement = function (event,org)
+    {
+        var data = {};
+        data.id = this.makeid();
+        data.height = 100;
+        data.width = 100;
+        data.type = org.dataset.type;
+        data.x = event.layerX;
+        data.y = event.layerY;
 
-        var org = event.target;
-
-        var div = document.createElement("div");
-        div.setAttribute("id",this.makeid());
-        div.className = "item resize drag "+org.dataset.type;
-        div.innerHTML = org.dataset.type+'<a onclick="openItem(this,\''+org.dataset.type+'\');" class="icon-pencil-alt"></a>';
-
-        var diff = this.getDistanceBetweenElements(document.body,this.page);
-        console.log(diff);
-        console.log(event);
-
-
-
-
-        var x = event.rect.left + diff.x;
-        var y = event.rect.top + diff.y;
-        div.setAttribute('data-x', x);
-        div.setAttribute('data-y', y);
-        div.style.transform = 'translate(' + x + 'px, ' + y + 'px)'
-
-        this.page.appendChild(div);
-
-        event.target.setAttribute('data-x', 0);
-        event.target.setAttribute('data-y', 0);
-        event.target.style.transform = '';
+        this.createItem(data);
+        this.saveData();
     }
 
+    createItem = function(data)
+    {
+        var ref = this;
+        var snapped = this.options.snapGrid(data.x,data.y);
+        var div = document.createElement("div");
+        div.setAttribute("id",data.id);
+        div.className = "item resize drag "+data.type;
+        div.style.height = data.height+"px";
+        div.style.width = data.width+"px";
+        div.setAttribute('data-x', snapped.x);
+        div.setAttribute('data-y', snapped.y);
+        div.setAttribute('data-type', data.type);
+        div.style.transform = 'translate(' + snapped.x + 'px, ' + snapped.y + 'px)';
 
-    moveLowerItems = function(event,dir){
+        var html = '<div class="item-nav">'
+        html += '<span class="info icon '+this.options.item_types[data.type].icon+'" title="'+data.type+'"></span>';
+        html += '<a class="edit icon-pencil-alt"></a>';
+        html += '<a class="remove icon-trash-alt"></a></div>';
+        html += '<div class="content"></div>';
+        div.innerHTML = html;
 
+        div.querySelector(".edit").addEventListener("click",function(event){
+            ref.editItem(event.target.parentNode.parentNode);
+        })
+
+        div.querySelector(".remove").addEventListener("click",function(event){
+            ref.removeItem(event.target.parentNode.parentNode);
+        })
+
+        this.page.appendChild(div);
+        return div;
+    }
+
+    removeItem = function(item)
+    {
+        this.page.removeChild(item);
+        this.saveData();
+    }
+
+    editItem = function (item)
+    {
+        this.current_item = item;
+        this.current_type = item.dataset.type;
+        this.current_content = item.querySelector(".content");
+
+        var suf;
+        var pre = "unknow-item";
+        var id = item.getAttribute("id");
+        if (this.onlyNumbers(id)){
+            suf = id+"/edit?";
+        }else{
+            suf = "create?temp_id="+id;
+        }
+
+        pre = this.options.item_types[item.dataset.type].path;
+
+        var url = "/admin/"+pre+"/"+suf+"&page_id="+this.options.page_id;
+
+        document.getElementById("edit_model-iframe").setAttribute("src",url);
+        this.options.editModal.show();
+    }
+
+    updateItem = function (data)
+    {
+        this.options.editModal.hide();
+        this.current_item.id = data.id;
+        window[this.current_type+"SetContent"](data,this.current_content);
+    }
+
+    moveLowerItems = function(event,dir)
+    {
         this.moveItems.forEach(move_item => {
             var y = (parseFloat(move_item.getAttribute('data-y')) || 0)
             var x = (parseFloat(move_item.getAttribute('data-x')) || 0)
-
             y += event.dy;
-
             move_item.setAttribute('data-x', x);
             move_item.setAttribute('data-y', y);
             move_item.style.transform = 'translate(' + x + 'px,' + y + 'px)'
         });
     }
 
-    collecMoveItems = function(event,dir){
-
+    collecMoveItems = function(event,dir)
+    {
         var bounds = this.getBounds(event.target);
         var y = event.target.getAttribute('data-y');
         var y_start = (parseFloat(y) + bounds.height);
-
         this.moveItems = [];
         this.page.querySelectorAll(".item").forEach(item => {
-
             var y = item.getAttribute('data-y');
             if (dir == "bottom"){
                 if (y > y_start && item != event.target){
@@ -300,7 +381,8 @@ class pageDesigner {
 /* data saving functions */
 /*-----------------------------------------------*/
 
-    getBounds = function (element) {
+    getBounds = function (element)
+    {
         const {top, left, width, height} = element.getBoundingClientRect();
         return {
             x: left,
@@ -310,76 +392,77 @@ class pageDesigner {
         };
     }
 
-    getDistanceBetweenElements = function(a, b) {
+    getDistanceBetweenElements = function(a, b)
+    {
        const aPosition = this.getBounds(a);
        const bPosition = this.getBounds(b);
-
        return {"x":(aPosition.x - bPosition.x), "y":(aPosition.y - bPosition.y)};
     }
 
-    loadItemData = function(){
-
-        var ref = this;
-        var doc = JSON.parse(document.getElementById("data").value);
+    loadItemData = function()
+    {
+        var value = document.getElementById("data").value ? document.getElementById("data").value : '{"items":[],"settings":{"height":500}}';
+        var doc = JSON.parse(value);
         this.page.style.height = doc.settings.height + "px";
-        var items_data = doc.items
         var i = 0;
-        this.page.querySelectorAll(".item").forEach(item => {
+        for(i in doc.items){
+            var item = doc.items[i];
+            var item_div = this.createItem(item);
+            if (this.options.item_data[item.type][item.id]){
+                var data = this.options.item_data[item.type][item.id];
+                this.current_content = item_div.querySelector(".content");
 
-            var item_data = items_data[i];
-            item.id = item_data.id;
-
-            Object.assign(item.style, {
-                width: `${item_data.width}px`,
-                height: `${item_data.height}px`,
-                transform: `translate(${item_data.x}px, ${item_data.y}px)`
-            })
-
-            Object.assign(item.dataset, { x:item_data.x, y:item_data.y });
-
-            i ++;
-
-        });
+                window[item.type+"SetContent"](data,this.current_content);
+            }
+        };
     }
 
-    saveItemData = function(){
-
+    saveItemData = function()
+    {
         var ref = this;
-        this.items = [];
+        var page_bounds = this.getBounds(this.page);
+        var page_height = page_bounds.height;
+        var page_width = page_bounds.width;
 
+        this.items = [];
         this.page.querySelectorAll(".item").forEach(item => {
 
             var bounds = ref.getBounds(item);
-            var x = item.getAttribute('data-x');
-            var y = item.getAttribute('data-y');
+            var x = Math.round(item.dataset.x);
+            var y = Math.round(item.dataset.y);
+            var height = Math.round(bounds.height);
+            var width = Math.round(bounds.width);
+
+            var px = Math.round((x / page_width) * 100);
+            var py = Math.round((y / page_height) * 100);
+            var pheight = Math.round((height / page_height) * 100);
+            var pwidth = Math.round((width / page_width) * 100);
+
             var id = item.getAttribute("id");
+            var type = item.dataset.type;
 
             if (!id || id == 'undefined'){
                 id = this.makeid();
                 item.setAttribute("id",id);
             }
 
-            this.items.push({id:id,x:Math.round(x),y:Math.round(y),width:Math.round(bounds.width),height:Math.round(bounds.height)});
+            this.items.push({id:id,type:type,x:x,y:y,width:width,height:height,px:px,py:py,pwidth:pwidth,pheight:pheight});
 
         });
         return this.items;
     }
 
-    saveDocsData = function(){
-        var settings = {
-            height: this.getBounds(this.page).height
-        }
+    saveDocsData = function()
+    {
+        var settings = this.getBounds(this.page);
         return settings;
     }
 
-    saveData = function(){
-
+    saveData = function()
+    {
         var doc = {};
         doc.items = this.saveItemData();
         doc.settings = this.saveDocsData();
-
         document.getElementById("data").value = JSON.stringify(doc);
     }
-
-
 }

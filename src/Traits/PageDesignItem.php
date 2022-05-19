@@ -3,10 +3,11 @@
 namespace OpenAdmin\Admin\PageDesigner\Traits;
 
 use OpenAdmin\Admin\Facades\Admin;
+use OpenAdmin\Admin\Form;
 use OpenAdmin\Admin\Layout\Content;
 
 //addBodyClass
-trait HideNavigation
+trait PageDesignItem
 {
     public function __construct()
     {
@@ -50,7 +51,7 @@ trait HideNavigation
     public function edit($id, Content $content)
     {
         $content->addBodyClass("hide-nav  white-bg");
-        return parent::edit($content);
+        return parent::edit($id, $content);
     }
 
     /**
@@ -62,7 +63,17 @@ trait HideNavigation
      */
     public function create(Content $content)
     {
-        $content->addBodyClass("hide-nav  white-bg");
+        $content->addBodyClass("hide-nav white-bg");
         return parent::create($content);
+    }
+
+    public function addPageDesigner($form)
+    {
+        $form->hidden('page_id', __('Page id'))->value(request()->page_id);
+        $form->saved(function (Form $form) {
+            $model = $form->model();
+            return response('<script>window.top.updateItem('.json_encode($model).');</script>');
+        });
+        return $form;
     }
 }

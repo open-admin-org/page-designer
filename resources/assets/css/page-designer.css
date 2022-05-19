@@ -1,16 +1,43 @@
 .pds .item{
     border:1px solid #CCC;
-    padding:10px;
     margin-bottom:10px;
+    position: relative;
+}
+
+.pds .item.drop{
+    padding:10px;
+    cursor:move;
+    box-sizing: border-box;
+}
+
+.pds .item .item-nav{
+    padding:10px;
+    background: rgba(255,255,255,0.8);
+    z-index: 10;
+    position: absolute;
+}
+
+.pds .item .item-nav a{
+    cursor: pointer;
+    margin:0 5px;
 }
 
 .pds #page .item{
     position: absolute;
 }
 
-.pds #page.relative .item{
-    margin:0;
-    position: relative;
+
+.pds .item .content{
+    position:absolute;
+    z-index:0;
+    width:100%;
+    height:100%;
+    left:0;
+    top:0;
+}
+
+.pds #page.dropzone.allow{
+    background:rgb(243, 243, 243);
 }
 
 .pds #tips{
@@ -19,3 +46,25 @@
     line-height:1.9rem;
     padding-right:0.5rem;
 }
+
+/*----------------------------------------------------*/
+/* content styles */
+/*----------------------------------------------------*/
+
+.pds .item .content img{
+    object-fit: cover;
+    width:100%;
+    height:100%;
+}
+
+.pds .item .content .icon-play{
+    background:rgba(255,255,255,0.5);
+    padding:12px 20px;
+    border-radius:5px;
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform: translate(-50%,-50%);
+}
+
+
