@@ -8,7 +8,7 @@ class resizable {
         }
 
         var defaults = {
-            "border_size": 4,
+            "border_size": 8,
             "side":"right",
         }
 
@@ -66,17 +66,16 @@ class resizable {
                 }
             },false);
 
+            panel.addEventListener("mouseup", function(){
+
+                document.removeEventListener("mousemove", resizeX, false);
+                document.removeEventListener("mousemove", resizeY, false);
+                if (typeof(ref.panel) != 'undefined'){
+                    ref.panel.dispatchEvent(resized_event);
+                }
+
+            }, false);
         });
-
-        document.addEventListener("mouseup", function(){
-
-            document.removeEventListener("mousemove", resizeX, false);
-            document.removeEventListener("mousemove", resizeY, false);
-            if (typeof(ref.panel) != 'undefined'){
-                ref.panel.dispatchEvent(resized_event);
-            }
-
-        }, false);
 
         function resizeY(e){
 

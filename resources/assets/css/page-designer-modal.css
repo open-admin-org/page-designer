@@ -1,6 +1,7 @@
 .white-bg,
 .white-bg main#main {
     background:#FFF;
+    width:98%;
 }
 section.content-header{
     display:none;
@@ -9,7 +10,9 @@ section.content-header{
 main#main.p-4{
     padding:0 !important;
 }
-
+.card{
+    box-shadow:none !important;
+}
 .card .card-header{
     display:none;
 }
@@ -18,4 +21,7 @@ main#main.p-4{
 }
 .card .navbar.form-footer .col-md-8{
     width:100%;
+}
+.row.fields-group{
+    margin:0;
 }
