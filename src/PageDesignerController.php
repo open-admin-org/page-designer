@@ -7,36 +7,35 @@ use OpenAdmin\Admin\Layout\Content;
 use OpenAdmin\Admin\PageDesigner\PageDesigner;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use App\Models\Page;
 
 class PageDesignerController extends Controller
 {
+    public function __construct()
+    {
+        $this->pageDesigner = new PageDesigner();
+    }
+
     public function index(Request $request, $id = null)
     {
         return Admin::content(function (Content $content) use ($id, $request) {
-            $this->page_id = $request->get('page_id');
-            $page = Page::find($this->page_id);
+            $this->pageDesigner->init($request->page_designer_id);
+            $this->pageDesigner->setData();
 
-            $pageDesigner = new PageDesigner($this->page_id);
-
-            $view_data = $pageDesigner->getViewData();
-            $view_data['page_id']   = $this->page_id;
-            $view_data['page_data'] = $page->data;
-
-            $content->body(view('laravel-admin-page-designer::index', $view_data));
-
+            $content->body(view('open-admin-page-designer::index', $this->pageDesigner->getViewData()));
             $content->header("Page designer");
         });
     }
 
     public function save(Request $request)
     {
-        $page = Page::find($request->page_id);
-        $page->data = $request->data;
-        $page->save();
+        $config = $this->pageDesigner->config;
 
-        admin_toastr('Message...', 'success');
+        $modelObj = $config['model']::find($request->page_designer_id);
+        $modelObj->setAttribute($config['field'], $request->input($config['field']));
+        $modelObj->save();
 
-        return redirect("/admin/page-designer?page_id=".$request->page_id);
+        admin_toastr('Save succeded!', 'success');
+
+        return redirect("/admin/page-designer?page_designer_id=".$request->page_designer_id);
     }
 }

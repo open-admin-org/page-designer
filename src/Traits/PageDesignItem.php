@@ -9,17 +9,22 @@ use OpenAdmin\Admin\Layout\Content;
 //addBodyClass
 trait PageDesignItem
 {
-    public function __construct()
+    public function initPageDesignItem()
     {
-        Admin::css('/vendor/open-admin-ext/page-designer/css/page-designer-modal.css');
+        $this->hook("alterForm", function ($scope, $form) {
+            Admin::css('/vendor/open-admin-ext/page-designer/css/page-designer-modal.css', false);
+            $form = $this->addPageDesigner($form);
+            return $form;
+        });
     }
+
     /**
-         * Index interface.
-         *
-         * @param Content $content
-         *
-         * @return Content
-         */
+     * Index interface.
+     *
+     * @param Content $content
+     *
+     * @return Content
+     */
     public function index(Content $content)
     {
         $content->addBodyClass("hide-nav  white-bg");
@@ -69,7 +74,11 @@ trait PageDesignItem
 
     public function addPageDesigner($form)
     {
-        $form->hidden('page_id', __('Page id'))->value(request()->page_id);
+        $settings = self::pageDesign();
+
+        $form->hidden($settings['parent_field'], 'parent')
+             ->value(request()->input($settings['parent_field']));
+
         $form->saved(function (Form $form) {
             $model = $form->model();
             return response('<script>window.top.updateItem('.json_encode($model).');</script>');
