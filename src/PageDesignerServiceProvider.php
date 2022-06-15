@@ -5,8 +5,6 @@ namespace OpenAdmin\Admin\PageDesigner;
 use Illuminate\Support\ServiceProvider;
 use OpenAdmin\Admin\Admin;
 use OpenAdmin\Admin\Form;
-use OpenAdmin\Admin\PageDesigner\PageDesignerField;
-use OpenAdmin\Admin\PageDesigner\PageDesignerExtention;
 
 class PageDesignerServiceProvider extends ServiceProvider
 {
@@ -20,7 +18,7 @@ class PageDesignerServiceProvider extends ServiceProvider
             $this->publishes(
                 [
                     __DIR__.'/../resources/assets/'  => public_path('vendor/open-admin-ext/page-designer/'),
-                    __DIR__.'/../resources/example/' => base_path('')
+                    __DIR__.'/../resources/example/' => base_path(''),
                 ],
                 'page-designer'
             );

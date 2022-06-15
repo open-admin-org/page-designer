@@ -4,7 +4,6 @@ namespace OpenAdmin\Admin\PageDesigner;
 
 use Illuminate\Support\Str;
 use OpenAdmin\Admin\PageDesigner\Traits\PageDesignItem;
-use OpenAdmin\Admin\PageDesigner\PageDesignerExtention;
 
 /**
  * Class PageDesigner.
@@ -26,7 +25,7 @@ class PageDesigner
     {
         $default = [
             'model'=> \App\Models\Page::class,
-            'field'=> 'data'
+            'field'=> 'data',
         ];
 
         $this->config = (array) PageDesignerExtention::config();
@@ -57,12 +56,12 @@ class PageDesigner
         }
 
         return [
-            'config'=>$this->config,
-            'item_types'=>$this->item_types,
-            'items'=>$this->items,
-            'doc'=>$this->doc,
-            'page_designer_id'=>$this->page_designer_id,
-            'scripts'=>$this->scripts
+            'config'          => $this->config,
+            'item_types'      => $this->item_types,
+            'items'           => $this->items,
+            'doc'             => $this->doc,
+            'page_designer_id'=> $this->page_designer_id,
+            'scripts'         => $this->scripts,
         ];
     }
 
@@ -70,7 +69,7 @@ class PageDesigner
     {
         if (empty($this->doc->settings)) {
             $this->doc = new \stdClass();
-            $this->doc->settings = (object)[];
+            $this->doc->settings = (object) [];
             $this->doc->settings->ratio = 1;
             $this->doc->items = [];
         } else {
@@ -89,22 +88,22 @@ class PageDesigner
 
     public function collectPageDesignItems()
     {
-        $classPaths = glob(app_path() . '/Admin/Controllers/*.php');
-        $pre = "\\App\\Admin\\Controllers\\";
+        $classPaths = glob(app_path().'/Admin/Controllers/*.php');
+        $pre = '\\App\\Admin\\Controllers\\';
 
         foreach ($classPaths as $classPath) {
             $segments = explode('/', $classPath);
-            $className = str_replace(".php", "", $segments[count($segments)-1]);
+            $className = str_replace('.php', '', $segments[count($segments) - 1]);
             $class = $pre.$className;
 
-            $model = str_replace("Controller", "", $className);
+            $model = str_replace('Controller', '', $className);
             $path = Str::plural(Str::kebab(class_basename($model)));
 
             if ($this->classHasPageDignItemTrait($class)) {
                 $data = $class::pageDesign();
                 $data['path'] = $path;
                 $data['class'] = $class;
-                if (method_exists($class, "pageDesignScripts")) {
+                if (method_exists($class, 'pageDesignScripts')) {
                     $this->scripts[] = $class::pageDesignScripts();
                 }
 

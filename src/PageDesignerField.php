@@ -17,7 +17,7 @@ class PageDesignerField extends Textarea
         $pageDesigner->setData($this->value);
 
         view()->share($pageDesigner->getViewData());
-        view()->share("is_field", true);
+        view()->share('is_field', true);
 
         return parent::render();
     }

@@ -2,11 +2,10 @@
 
 namespace OpenAdmin\Admin\PageDesigner;
 
-use OpenAdmin\Admin\Facades\Admin;
-use OpenAdmin\Admin\Layout\Content;
-use OpenAdmin\Admin\PageDesigner\PageDesigner;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use OpenAdmin\Admin\Facades\Admin;
+use OpenAdmin\Admin\Layout\Content;
 
 class PageDesignerController extends Controller
 {
@@ -17,12 +16,12 @@ class PageDesignerController extends Controller
 
     public function index(Request $request, $id = null)
     {
-        return Admin::content(function (Content $content) use ($id, $request) {
+        return Admin::content(function (Content $content) use ($request) {
             $this->pageDesigner->init($request->page_designer_id);
             $this->pageDesigner->setData();
 
             $content->body(view('open-admin-page-designer::index', $this->pageDesigner->getViewData()));
-            $content->header("Page designer");
+            $content->header('Page designer');
         });
     }
 
@@ -36,6 +35,6 @@ class PageDesignerController extends Controller
 
         admin_toastr('Save succeded!', 'success');
 
-        return redirect("/admin/page-designer?page_designer_id=".$request->page_designer_id);
+        return redirect('/admin/page-designer?page_designer_id='.$request->page_designer_id);
     }
 }

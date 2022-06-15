@@ -2,12 +2,12 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\PageDesignerVideo;
 use OpenAdmin\Admin\Controllers\AdminController;
 use OpenAdmin\Admin\Form;
 use OpenAdmin\Admin\Grid;
-use OpenAdmin\Admin\Show;
-use App\Models\PageDesignerVideo;
 use OpenAdmin\Admin\PageDesigner\Traits\PageDesignItem;
+use OpenAdmin\Admin\Show;
 
 class PageDesignerVideoController extends AdminController
 {
@@ -21,17 +21,17 @@ class PageDesignerVideoController extends AdminController
     public static function pageDesign()
     {
         return [
-            "parent_field"=>"page_id",
-            "type"=>"video",
-            "title"=>"video",
-            "icon"=>"icon-file-video",
-            "model"=>"\App\Models\PageDesignerVideo"
+            'parent_field'=> 'page_id',
+            'type'        => 'video',
+            'title'       => 'video',
+            'icon'        => 'icon-file-video',
+            'model'       => "\App\Models\PageDesignerVideo",
         ];
     }
 
     public static function pageDesignScripts()
     {
-        return <<<JS
+        return <<<'JS'
             window.videoSetContent = function(data,current_content){
                 current_content.innerHTML = '<img src="/storage/'+data.thumb+'"><div class="icon icon-play"></div>';
             };
@@ -70,6 +70,7 @@ class PageDesignerVideoController extends AdminController
      * Make a show builder.
      *
      * @param mixed $id
+     *
      * @return Show
      */
     protected function detail($id)
@@ -102,6 +103,7 @@ class PageDesignerVideoController extends AdminController
                 $constraint->aspectRatio();
                 $constraint->upsize();
             });
+
             return $image;
         });
         $form->file('thumb_video', __('Thumb video'));

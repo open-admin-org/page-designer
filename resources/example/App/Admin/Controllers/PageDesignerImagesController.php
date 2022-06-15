@@ -2,12 +2,12 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\PageDesignerImages;
 use OpenAdmin\Admin\Controllers\AdminController;
 use OpenAdmin\Admin\Form;
 use OpenAdmin\Admin\Grid;
-use OpenAdmin\Admin\Show;
-use App\Models\PageDesignerImages;
 use OpenAdmin\Admin\PageDesigner\Traits\PageDesignItem;
+use OpenAdmin\Admin\Show;
 
 class PageDesignerImagesController extends AdminController
 {
@@ -21,17 +21,17 @@ class PageDesignerImagesController extends AdminController
     public static function pageDesign()
     {
         return [
-            "parent_field"=>"page_id",
-            "type"=>"images",
-            "title"=>"images",
-            "icon"=>"icon-file-image",
-            "model"=>"\App\Models\PageDesignerImages"
+            'parent_field'=> 'page_id',
+            'type'        => 'images',
+            'title'       => 'images',
+            'icon'        => 'icon-file-image',
+            'model'       => "\App\Models\PageDesignerImages",
         ];
     }
 
     public static function pageDesignScripts()
     {
-        return <<<JS
+        return <<<'JS'
             window.imagesSetContent = function(data,current_content){
                 current_content.innerHTML = '<img src="/storage/'+data.images[0]+'">';
             };
@@ -68,6 +68,7 @@ class PageDesignerImagesController extends AdminController
      * Make a show builder.
      *
      * @param mixed $id
+     *
      * @return Show
      */
     protected function detail($id)
@@ -98,12 +99,14 @@ class PageDesignerImagesController extends AdminController
                 $constraint->aspectRatio();
                 $constraint->upsize();
             });
+
             return $image;
         })->thumbnailFunction('large', function ($image) {
             $image->resize(1920, 1080, function ($constraint) {
                 $constraint->aspectRatio();
                 $constraint->upsize();
             });
+
             return $image;
         });
         $form->text('title', __('Title'));

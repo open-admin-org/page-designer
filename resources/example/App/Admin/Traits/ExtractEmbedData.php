@@ -15,6 +15,7 @@ trait ExtractEmbedData
                 $model->embed_data = $this->get_video_data(request()->embed);
             }
         });
+
         return $form;
     }
 
@@ -24,34 +25,36 @@ trait ExtractEmbedData
         $code = '';
         $image = '';
 
-        if (strpos($url, "youtube") != false) {
+        if (strpos($url, 'youtube') != false) {
             $code = $this->get_youtube_id_from_url($url);
-            $image = "https://i.ytimg.com/vi/".$code."/maxresdefault.jpg";
+            $image = 'https://i.ytimg.com/vi/'.$code.'/maxresdefault.jpg';
         }
 
-        if (strpos($url, "vimeo") != false) {
+        if (strpos($url, 'vimeo') != false) {
             $code = $this->get_vimeo_id_from_url($url);
             $raw_data = file_get_contents('https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/'.$code.'&width=480&height=360');
             $data = json_decode($raw_data, true);
             $image = $data['thumbnail_url'];
         }
 
-        return ['code'=>$code,'image'=>$image,'image'=>$image,'url'=>$url];
+        return ['code'=>$code, 'image'=>$image, 'image'=>$image, 'url'=>$url];
     }
 
     public function get_youtube_id_from_url($url)
     {
         preg_match('/(http(s|):|)\/\/(www\.|)yout(.*?)\/(embed\/|watch.*?v=|)([a-z_A-Z0-9\-]{11})/i', $url, $results);
+
         return $results[6];
     }
 
     public function get_vimeo_id_from_url($url = '')
     {
-        $regs = array();
+        $regs = [];
         $id = '';
         if (preg_match('%^https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)(?:[?]?.*)$%im', $url, $regs)) {
             $id = $regs[3];
         }
+
         return $id;
     }
 
@@ -59,6 +62,7 @@ trait ExtractEmbedData
      * Get the video URL in $content and return it.
      *
      * @param string $content
+     *
      * @return bool|string
      */
     public function custom_get_embededurl($content)
@@ -74,10 +78,10 @@ trait ExtractEmbedData
                 // The regex will not return https:// or https://www so we have to add it manually.
                 if (false !== strpos($content, 'youtube')) {
                     // For youtube.com links add https://www
-                    $url = 'https://www.' . $url;
+                    $url = 'https://www.'.$url;
                 } else {
                     // For youtu.be links add https://
-                    $url = 'https://' . $url;
+                    $url = 'https://'.$url;
                 }
                 $url = str_replace('"', '', $url);
             }
