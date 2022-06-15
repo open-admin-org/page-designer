@@ -6,8 +6,6 @@ use OpenAdmin\Admin\Controllers\AdminController;
 use OpenAdmin\Admin\Form;
 use OpenAdmin\Admin\Grid;
 use OpenAdmin\Admin\Show;
-use App\Admin\Actions\PageDesigner as PageDesignerAction;
-use App\Admin\Actions\PagePreview;
 use App\Models\PageDesigner;
 
 class PageDesignerController extends AdminController
@@ -46,12 +44,6 @@ class PageDesignerController extends AdminController
         $grid->column('status', __('Status'))->switch();
         $grid->column('created_at', __('Created at'))->dateFormat("Y-m-d H:m:s");
         $grid->column('updated_at', __('Updated at'))->dateFormat("Y-m-d H:m:s");
-
-        $grid->actions(function ($actions) {
-            $actions->disableShow();
-            $actions->add(new PagePreview());
-            $actions->add(new PageDesignerAction());
-        });
 
         return $grid;
     }
@@ -99,10 +91,7 @@ class PageDesignerController extends AdminController
 
         $form->tab('Page', function ($form) {
             $form->switch('status', __('Status'));
-            $form->select('pid', __("Parent"))->options(Page::all()->pluck('title', 'id'));
-            $form->select('redirect_to', __("Redirect"))->options(Page::orderBy("id", "desc")->get()->pluck('title', 'slug'));
             $form->number('rank', __('Rank'));
-            $form->select('menu_pos', __('Menu Pos'))->options(["left"=>"Left","right"=>"Right"])->default("left");
             $form->select('type', __('Type'))->options(["root"=>"Homepage","page_designer"=>"Page Designer","contact"=>"Contact","external"=>"External Link"])->default("page_designer");
             $form->text('title', __('Title'));
             $form->text('slug', __('Slug'));

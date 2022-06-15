@@ -252,62 +252,9 @@
             }
         });
 
-        lightbox.on('slide_changed', () => {
-            let slide = document.querySelector(".gslide.loaded.current");
-            let slide_bounds = slide.getBoundingClientRect();
-            let media = slide.querySelector(".gslide-media");
-            let bounds = media.getBoundingClientRect();
-            let video = slide.querySelector(".gvideo-container");
-            let maxWidth = media.style.maxWidth;
-
-            if (maxWidth.indexOf("px") && bounds.height > slide_bounds.height){
-                let ratio = bounds.width / bounds.height;
-                let newMaxWidth = slide_bounds.height * ratio;
-                let newMaxWidthStr = newMaxWidth + "px";
-
-                media.style.maxWidth = newMaxWidthStr;
-                lightbox.settings.videosWidth = newMaxWidthStr;
-            }
-
-            // height for
-            bounds = media.getBoundingClientRect();
-            let minus = 0;
-            if (video){
-                minus = 50;
-            }
-
-            let top = bounds.top;
-            let height = bounds.height - minus;
-
-            document.querySelectorAll(".glightbox-clean .gnext.gbtn, .glightbox-clean .gprev").forEach(el=>{
-                el.style.top = top + "px";
-                el.style.height = height + "px";
-            })
-        });
-
         window.onresize = windowResized;
-
-        maxWidthVideos();
-
     });
 
-    function get_maxWidthVideos(){
-        var default_ratio = 16 / 9;
-        var ratio = window.innerWidth / window.innerHeight;
-        var maxHeight = window.innerHeight - 140;
-
-        if (ratio > default_ratio){
-            return (maxHeight * default_ratio)+"px";
-        }else{
-            return "80vw";
-        }
-
-
-    }
-    function maxWidthVideos(){
-        var width = get_maxWidthVideos();
-        lightbox.settings.videosWidth = width;
-    }
 
     var splide_arr;
 
