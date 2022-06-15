@@ -2,13 +2,12 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\PageDesignerInlineGallery;
 use OpenAdmin\Admin\Controllers\AdminController;
-
 use OpenAdmin\Admin\Form;
 use OpenAdmin\Admin\Grid;
-use OpenAdmin\Admin\Show;
-use App\Models\PageDesignerInlineGallery;
 use OpenAdmin\Admin\PageDesigner\Traits\PageDesignItem;
+use OpenAdmin\Admin\Show;
 
 class PageDesignerInlineGalleryController extends AdminController
 {
@@ -22,17 +21,17 @@ class PageDesignerInlineGalleryController extends AdminController
     public static function pageDesign()
     {
         return [
-            "parent_field"=>"page_id",
-            "type"=>"inline_gallery",
-            "title"=>"inline gallery",
-            "icon"=>"icon-image",
-            "model"=>"\App\Models\PageDesignerInlineGallery",
+            'parent_field'=> 'page_id',
+            'type'        => 'inline_gallery',
+            'title'       => 'inline gallery',
+            'icon'        => 'icon-image',
+            'model'       => "\App\Models\PageDesignerInlineGallery",
         ];
     }
 
     public static function pageDesignScripts()
     {
-        return <<<JS
+        return <<<'JS'
             window.inline_gallerySetContent = function(data,current_content){
                 current_content.innerHTML = '<img src="/storage/'+data.images[0]+'">';
             };
@@ -69,6 +68,7 @@ class PageDesignerInlineGalleryController extends AdminController
      * Make a show builder.
      *
      * @param mixed $id
+     *
      * @return Show
      */
     protected function detail($id)
@@ -100,6 +100,7 @@ class PageDesignerInlineGalleryController extends AdminController
                 $constraint->aspectRatio();
                 $constraint->upsize();
             });
+
             return $image;
         });
 

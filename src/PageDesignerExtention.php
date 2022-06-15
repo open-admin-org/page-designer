@@ -2,9 +2,8 @@
 
 namespace OpenAdmin\Admin\PageDesigner;
 
-use OpenAdmin\Admin\Extension;
 use OpenAdmin\Admin\Admin;
-use OpenAdmin\Admin\PageDesigner\PageDesigner;
+use OpenAdmin\Admin\Extension;
 
 /**
  * Class PageDesigner.

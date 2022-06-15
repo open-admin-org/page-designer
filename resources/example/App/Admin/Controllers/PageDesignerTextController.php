@@ -2,12 +2,12 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\PageDesignerText;
 use OpenAdmin\Admin\Controllers\AdminController;
 use OpenAdmin\Admin\Form;
 use OpenAdmin\Admin\Grid;
-use OpenAdmin\Admin\Show;
-use App\Models\PageDesignerText;
 use OpenAdmin\Admin\PageDesigner\Traits\PageDesignItem;
+use OpenAdmin\Admin\Show;
 
 class PageDesignerTextController extends AdminController
 {
@@ -21,17 +21,17 @@ class PageDesignerTextController extends AdminController
     public static function pageDesign()
     {
         return [
-            "parent_field"=>"page_id",
-            "type"=>"text",
-            "title"=>"text",
-            "icon"=>"icon-align-left",
-            "model"=>"\App\Models\PageDesignerText"
+            'parent_field'=> 'page_id',
+            'type'        => 'text',
+            'title'       => 'text',
+            'icon'        => 'icon-align-left',
+            'model'       => "\App\Models\PageDesignerText",
         ];
     }
 
     public static function pageDesignScripts()
     {
-        return <<<JS
+        return <<<'JS'
             window.textSetContent = function(data,current_content){
                 current_content.innerHTML = data.body;
             };
@@ -68,6 +68,7 @@ class PageDesignerTextController extends AdminController
      * Make a show builder.
      *
      * @param mixed $id
+     *
      * @return Show
      */
     protected function detail($id)

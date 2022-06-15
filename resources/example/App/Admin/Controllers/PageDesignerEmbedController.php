@@ -2,13 +2,13 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Traits\ExtractEmbedData;
+use App\Models\PageDesignerEmbed;
 use OpenAdmin\Admin\Controllers\AdminController;
 use OpenAdmin\Admin\Form;
 use OpenAdmin\Admin\Grid;
-use OpenAdmin\Admin\Show;
-use App\Models\PageDesignerEmbed;
-use App\Admin\Traits\ExtractEmbedData;
 use OpenAdmin\Admin\PageDesigner\Traits\PageDesignItem;
+use OpenAdmin\Admin\Show;
 
 class PageDesignerEmbedController extends AdminController
 {
@@ -23,17 +23,17 @@ class PageDesignerEmbedController extends AdminController
     public static function pageDesign()
     {
         return [
-            "parent_field"=>"page_id",
-            "type"=>"embed",
-            "title"=>"embed",
-            "icon"=>"icon-code",
-            "model"=>"\App\Models\PageDesignerEmbed",
+            'parent_field'=> 'page_id',
+            'type'        => 'embed',
+            'title'       => 'embed',
+            'icon'        => 'icon-code',
+            'model'       => "\App\Models\PageDesignerEmbed",
         ];
     }
 
     public static function pageDesignScripts()
     {
-        return <<<JS
+        return <<<'JS'
             window.embedSetContent = function(data,current_content){
                 var thumb = "";
                 if (data.thumb != ""){
@@ -80,6 +80,7 @@ class PageDesignerEmbedController extends AdminController
      * Make a show builder.
      *
      * @param mixed $id
+     *
      * @return Show
      */
     protected function detail($id)
@@ -110,6 +111,7 @@ class PageDesignerEmbedController extends AdminController
                 $constraint->aspectRatio();
                 $constraint->upsize();
             });
+
             return $image;
         });
         $form->file('thumb_video', __('Thumb Video'));
