@@ -1,86 +1,92 @@
 <div class="row pds" id="pds-app">
+    <div class="col-md-9" style="width:1010px !important;min-width:1010px;">
+        @if (empty($is_field))
+            <form method="post" action="/admin/page-designer/save?page_designer_id={{$page_designer_id}}" id="page-designer-form">
+            @csrf
 
+            <div class="card card-primary">
+                <div class="card-header with-border d-flex">
+                    <button type="button" class="btn btn-primary btn-sm log-refresh me-2" onclick="document.forms['page-designer-form'].submit();"><i class="icon-save"></i> {{ trans('admin.save') }}</button>
+                    <div id="tips" class="ms-auto"></div>
+                </div>
+                @include("open-admin-page-designer::part-page")
 
-    <div class="col-md-9" style="width:1024px !important;min-width:1024px;">
-        <form method="post" action="/admin/page-designer/save?page_id={{$page_id}}" id="page-designer-form">
-        @csrf
-        <div class="card card-primary">
+                <div class="w-100 p-3">
+                    <textarea name="data" id="data" class="p-2" style="display:nonea;min-height:300px;width:100%;">{!!$doc!!}</textarea>
+                </div>
+            </div>
+            </form>
+        @else
             <div class="card-header with-border d-flex">
-                <button type="button" class="btn btn-primary btn-sm log-refresh me-2" onclick="document.forms['page-designer-form'].submit();"><i class="icon-save"></i> {{ trans('admin.save') }}</button>
+                <h3 class="card-title">Page Deisgner</h3>
                 <div id="tips" class="ms-auto"></div>
             </div>
-            <div class="card-body no-padding" style="position:relative;">
-                <div id="page" class="dropzone" style="border:1px solid #CCC;min-height:400px;">
-                </div>
-                <textarea name="data" id="data" style="display:none;min-height:300px;width:100%;">{!!$page_data!!}</textarea>
-            </div>
-        </div>
-         </form>
-    </div>
+            @include("open-admin-page-designer::part-page")
 
+            <textarea name="{{$name}}" id="{{$name}}" style="display:none;">{!!$doc!!}</textarea>
+        @endif
+    </div>
 
     <div class="col-md-3">
         <div class="card card-solid">
             <div class="card-header with-border">
-                <h3 class="card-title">Elements</h3>
+                <h3 class="card-title">Elements (Drag)</h3>
             </div>
-            <div class="card-body no-padding">
-                Drag me
-                @foreach($items as $item)
-                <div class="item drop {{$item['type']}}" draggable="true" data-type="{{$item['type']}}">{{$item['title']}} </div>
+            <div class="card-body no-padding" id="page-drop">
+                <div class="position-sticky sticky-top" style="padding-top:4.1rem;">
+                @foreach($item_types as $item_type)
+                <div class="item drop {{$item_type['type']}}" draggable="true" data-type="{{$item_type['type']}}">{{$item_type['title']}} </div>
                 @endforeach
+                </div>
             </div>
         </div>
-        <div class="card card-solid mt-4">
-            <div class="card-header with-border">
-                <h3 class="card-title">Info</h3>
-            </div>
-            <div class="card-body no-padding">
-                <ul class="nav nav-pills nav-stacked">
-                    <li class="margin: 10px;">
-                        <a>Size:</a>
-                    </li>
-                    <li class="margin: 10px;">
-                        <a>Updated at: </a>
-                    </li>
-                </ul>
+    </div>
+
+    <div class="modal fade" id="edit_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="height:80%;">
+            <div class="modal-content" style="height:100%;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="edit_model-iframe" style="width:100%;height:100%;"></iframe>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="edit_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" style="height:80%;">
-        <div class="modal-content" style="height:100%;">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <iframe id="edit_model-iframe" style="width:100%;height:100%;"></iframe>
-                ...
-            </div>
-        </div>
-    </div>
-</div>
 
-<script data-exec-on-popstate>
-
-    function updateItem(data){
-        pageDesignerObj.updateItem(data);
-    }
-    window.updateItem = updateItem;
+<script>
+    @foreach ($scripts as $script)
+        {!!$script!!}
+    @endforeach
 
     var editModal = new bootstrap.Modal(document.getElementById('edit_modal'), {});
-    var item_types = {!!$items_json!!};
-    var item_data =  {!!$item_data_json!!};
+    var item_types = {!! json_encode($item_types) !!};
+    var item_data =  {!!json_encode($items) !!};
     var pageDesignerObj = new pageDesigner({
-        page_id : "{{$page_id}}",
+        field   : "{{$config['field']}}",
+        page_designer_id : "{{$page_designer_id}}",
         tips : "#tips",
         page : "#page",
         item_types : item_types,
         item_data : item_data,
         editModal : editModal,
     });
+
+    function updateItem(data){
+        pageDesignerObj.updateItem(data);
+    }
+
+    function addHeight(height,side = 'bottom'){
+        pageDesignerObj.addHeight(height,side);
+    }
+
+    window.updateItem = updateItem;
+    window.addHeight = addHeight;
+
+
 
 </script>
