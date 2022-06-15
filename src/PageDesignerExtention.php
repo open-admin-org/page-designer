@@ -41,7 +41,7 @@ class PageDesignerExtention extends Extension
     }
 
     /**
-     * Import to menu
+     * Import to menu.
      */
     public static function import()
     {

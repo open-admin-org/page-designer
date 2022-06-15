@@ -2,11 +2,11 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\PageDesigner;
 use OpenAdmin\Admin\Controllers\AdminController;
 use OpenAdmin\Admin\Form;
 use OpenAdmin\Admin\Grid;
 use OpenAdmin\Admin\Show;
-use App\Models\PageDesigner;
 
 class PageDesignerController extends AdminController
 {
@@ -19,7 +19,7 @@ class PageDesignerController extends AdminController
 
     public function __construct()
     {
-        $this->hook("alterGrid", function ($scope, $grid) {
+        $this->hook('alterGrid', function ($scope, $grid) {
             return $grid;
         });
     }
@@ -37,13 +37,13 @@ class PageDesignerController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('pid', __('Pid'));
-        $grid->column('menu_pos', __('Menu Pos'))->select(["left"=>"Left","right"=>"Right"]);
+        $grid->column('menu_pos', __('Menu Pos'))->select(['left'=>'Left', 'right'=>'Right']);
         $grid->column('title', __('Title'));
         $grid->column('type', __('Type'));
         $grid->column('slug', __('Slug'));
         $grid->column('status', __('Status'))->switch();
-        $grid->column('created_at', __('Created at'))->dateFormat("Y-m-d H:m:s");
-        $grid->column('updated_at', __('Updated at'))->dateFormat("Y-m-d H:m:s");
+        $grid->column('created_at', __('Created at'))->dateFormat('Y-m-d H:m:s');
+        $grid->column('updated_at', __('Updated at'))->dateFormat('Y-m-d H:m:s');
 
         return $grid;
     }
@@ -52,6 +52,7 @@ class PageDesignerController extends AdminController
      * Make a show builder.
      *
      * @param mixed $id
+     *
      * @return Show
      */
     protected function detail($id)
@@ -92,7 +93,7 @@ class PageDesignerController extends AdminController
         $form->tab('Page', function ($form) {
             $form->switch('status', __('Status'));
             $form->number('rank', __('Rank'));
-            $form->select('type', __('Type'))->options(["root"=>"Homepage","page_designer"=>"Page Designer","contact"=>"Contact","external"=>"External Link"])->default("page_designer");
+            $form->select('type', __('Type'))->options(['root'=>'Homepage', 'page_designer'=>'Page Designer', 'contact'=>'Contact', 'external'=>'External Link'])->default('page_designer');
             $form->text('title', __('Title'));
             $form->text('slug', __('Slug'));
         });
