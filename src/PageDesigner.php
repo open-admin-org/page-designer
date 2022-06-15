@@ -21,15 +21,13 @@ class PageDesigner
      *
      * @param null $file
      */
-    public function __construct()
+    public function __construct($set_config = [])
     {
         $default = [
-            'model'=> \App\Models\Page::class,
-            'field'=> 'data',
+            "snap"=>40
         ];
-
         $this->config = (array) PageDesignerExtention::config();
-        $this->config = array_merge($this->config, $default);
+        $this->config = array_merge($default, $this->config, $set_config);
     }
 
     public function init($page_designer_id = null)
@@ -41,12 +39,7 @@ class PageDesigner
 
     public function setData($data = false)
     {
-        if (!$data) {
-            $modelObj = $this->config['model']::find($this->page_designer_id);
-            $this->doc = empty($modelObj) ? '' : $modelObj->getAttribute($this->config['field']);
-        } else {
-            $this->doc = $data;
-        }
+        $this->doc = $data;
     }
 
     public function getViewData($frontend = false)

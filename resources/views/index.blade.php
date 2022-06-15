@@ -1,30 +1,30 @@
 <div class="row pds" id="pds-app">
     <div class="col-md-9" style="width:1010px !important;min-width:1010px;">
-        @if (empty($is_field))
-            <form method="post" action="/admin/page-designer/save?page_designer_id={{$page_designer_id}}" id="page-designer-form">
-            @csrf
 
-            <div class="card card-primary">
-                <div class="card-header with-border d-flex">
-                    <button type="button" class="btn btn-primary btn-sm log-refresh me-2" onclick="document.forms['page-designer-form'].submit();"><i class="icon-save"></i> {{ trans('admin.save') }}</button>
-                    <div id="tips" class="ms-auto"></div>
-                </div>
-                @include("open-admin-page-designer::part-page")
+        <div class="card-header with-border d-flex">
+            <h3 class="card-title">Page Deisgner</h3>
+            <div id="tips" class="ms-auto"></div>
+        </div>
 
-                <div class="w-100 p-3">
-                    <textarea name="data" id="data" class="p-2" style="display:nonea;min-height:300px;width:100%;">{!!$doc!!}</textarea>
-                </div>
+        <div class="card-body no-padding" style="position:relative;">
+            <div class="pt-2 pb-4">
+                <a class="btn btn-light me-2" onclick="window.addHeight(100,'top');return false;">add 100px</a>
+                <a class="btn btn-light me-2" onclick="window.addHeight(200,'top');return false;">add 200px</a>
+                <a class="btn btn-light me-2" onclick="window.addHeight(500,'top');return false;">add 500px</a>
+                <a class="btn btn-light me-2" onclick="window.addHeight(1000,'top');return false;">add 1000px</a>
             </div>
-            </form>
-        @else
-            <div class="card-header with-border d-flex">
-                <h3 class="card-title">Page Deisgner</h3>
-                <div id="tips" class="ms-auto"></div>
+            <div id="page" class="dropzone" style="border:1px solid #CCC;min-height:400px;">
             </div>
-            @include("open-admin-page-designer::part-page")
+            <div class="pt-4">
+                <a class="btn btn-light me-2" onclick="window.addHeight(100);return false;">add 100px</a>
+                <a class="btn btn-light me-2" onclick="window.addHeight(200);return false;">add 200px</a>
+                <a class="btn btn-light me-2" onclick="window.addHeight(500);return false;">add 500px</a>
+                <a class="btn btn-light me-2" onclick="window.addHeight(1000);return false;">add 1000px</a>
+            </div>
+        </div>
 
-            <textarea name="{{$name}}" id="{{$name}}" style="display:none;">{!!$doc!!}</textarea>
-        @endif
+        <textarea name="{{$name}}" id="{{$name}}" style="display:none;">{!!$doc!!}</textarea>
+
     </div>
 
     <div class="col-md-3">
@@ -57,7 +57,6 @@
     </div>
 </div>
 
-
 <script>
     @foreach ($scripts as $script)
         {!!$script!!}
@@ -66,14 +65,16 @@
     var editModal = new bootstrap.Modal(document.getElementById('edit_modal'), {});
     var item_types = {!! json_encode($item_types) !!};
     var item_data =  {!!json_encode($items) !!};
+
     var pageDesignerObj = new pageDesigner({
-        field   : "{{$config['field']}}",
+        field            : "{{$config['field']}}",
+        snap             : {{$config['snap']}},
         page_designer_id : "{{$page_designer_id}}",
-        tips : "#tips",
-        page : "#page",
-        item_types : item_types,
-        item_data : item_data,
-        editModal : editModal,
+        tips             : "#tips",
+        page             : "#page",
+        item_types       : item_types,
+        item_data        : item_data,
+        editModal        : editModal,
     });
 
     function updateItem(data){

@@ -13,6 +13,7 @@
     ],
     "require": {
         "php": ">=7.0.0",
+        "open-admin-ext/ckeditor": "~1.0",
         "open-admin-org/open-admin": "~1.0.14"
     },
     "require-dev": {

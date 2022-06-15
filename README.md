@@ -1,24 +1,46 @@
 Log viewer for laravel-admin
 ============================
 
-[![StyleCI](https://styleci.io/repos/98625172/shield?branch=master)](https://styleci.io/repos/98625172)
-[![Packagist](https://img.shields.io/packagist/l/laravel-admin-ext/page-designer.svg?maxAge=2592000)](https://packagist.org/packages/open-admin-ext/page-designer)
+[![StyleCI](https://styleci.io/repos/503893269/shield?branch=main)](https://styleci.io/repos/503893269)
+[![Packagist](https://img.shields.io/github/license/open-admin-org/page-designer.svg?style=flat-square&color=brightgreen)](https://packagist.org/packages/open-admin-ext/page-designer)
 [![Total Downloads](https://img.shields.io/packagist/dt/open-admin-ext/page-designer.svg?style=flat-square)](https://packagist.org/packages/open-admin-ext/page-designer)
 [![Pull request welcome](https://img.shields.io/badge/pr-welcome-green.svg?style=flat-square)]()
 
 ## Screenshot
 
-![wx20170809-165644](https://user-images.githubusercontent.com/1479100/29113581-fe48fd86-7d23-11e7-9ee7-9680957171ee.png)
 
 ## Installation
 
+### 1) Terminal
+
 ```
-$ composer require open-admin-ext/page-designer -vvv
+$ composer require open-admin-ext/page-designer
 
 $ php artisan admin:import page-designer
+
+$ php artisan vendor:publish --tag=page-designer
+
+$ php artisan migrate
 ```
 
-Open `http://localhost/admin/logs`.
+### 2) Add Routes
+Add admin routes in App/Admin/routes.php
+```php
+$router->resource('page-designer-images', PageDesignerImagesController::class);
+$router->resource('page-designer-videos', PageDesignerVideoController::class);
+$router->resource('page-designer-texts', PageDesignerTextController::class);
+$router->resource('page-designer-inline-galleries', PageDesignerInlineGalleryController::class);
+$router->resource('page-designer-embeds', PageDesignerEmbedController::class);
+```
+
+Add admin routes in routes/web.php
+```php
+use App\Http\Controllers\PageDesignerController;
+
+Route::get('/page/{id}', [PageDesignerController::class, 'index'])->name('page-designer');
+```
+
+
 
 License
 ------------

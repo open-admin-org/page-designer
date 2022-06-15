@@ -28,21 +28,20 @@ class PageDesignerExtention extends Extension
     }
 
     /**
-     * Register routes for laravel-admin.
+     * Register routes for open-admin.
      *
      * @return void
      */
     protected static function registerRoutes()
     {
         parent::routes(function ($router) {
-            /* @var \Illuminate\Routing\Router $router */
             $router->get('page-designer', 'OpenAdmin\Admin\PageDesigner\PageDesignerController@index')->name('page-designer-index');
             $router->post('page-designer/save', 'OpenAdmin\Admin\PageDesigner\PageDesignerController@save')->name('page-designer-save');
         });
     }
 
     /**
-     * {@inheritdoc}
+     * Import to menu
      */
     public static function import()
     {

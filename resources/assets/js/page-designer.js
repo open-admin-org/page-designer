@@ -12,13 +12,14 @@ class pageDesigner {
             "page": "#page",
             "pageDrop": "#page-drop",
             "tips": "#tips",
-            "item_class":".item",
+            "item_class":"item",
             "snap": 40,
             "minSize": 80,
         }
 
         this.options = Object.assign({}, defaults, options);
         this.options.snapGrid = interact.snappers.grid({x: this.options.snap, y: this.options.snap});
+        this.options.item_selector = '.'+this.options.item_class;
 
         this.beforeInit();
         this.initKeystate();
@@ -209,7 +210,7 @@ class pageDesigner {
         .on('dragmove', function (event) {
 
             var targets = [event.target];
-            var items = document.querySelectorAll(".item.selected");
+            var items = document.querySelectorAll(ref.options.item_selector+".selected");
 
             if (items.length > 0) {
                 targets = items;
@@ -234,7 +235,7 @@ class pageDesigner {
     setDragBounds = function (event){
 
         var page_bounds = this.page.getBoundingClientRect();
-        var items = document.querySelectorAll(".item.selected");
+        var items = document.querySelectorAll(this.options.item_selector+".selected");
         var scrollPos = this.getScrollPos();
 
         if (!items.length){
@@ -381,8 +382,9 @@ class pageDesigner {
         var ref = this;
         var snapped = this.options.snapGrid(data.x,data.y);
         var div = document.createElement("div");
+
         div.setAttribute("id",data.id);
-        div.className = "item resize drag "+data.type;
+        div.className = ref.options.item_class+" resize drag "+data.type;
         div.style.height = data.height+"px";
         div.style.width = data.width+"px";
         div.setAttribute('data-x', snapped.x);
@@ -467,7 +469,7 @@ class pageDesigner {
     {
         this.moveItems = [];
         if (event == null){
-            this.page.querySelectorAll(".item").forEach(item => {
+            this.page.querySelectorAll(this.options.item_selector).forEach(item => {
                 this.moveItems.push(item);
             });
         }else{
@@ -475,7 +477,7 @@ class pageDesigner {
             var y = event.target.getAttribute('data-y');
             var y_start = (parseFloat(y) + bounds.height);
 
-            this.page.querySelectorAll(".item").forEach(item => {
+            this.page.querySelectorAll(this.options.item_selector).forEach(item => {
                 var y = item.getAttribute('data-y');
                 if (dir == "bottom"){
                     if (y > y_start && item != event.target){
@@ -558,17 +560,10 @@ class pageDesigner {
             element = null;
 
             const rect = ref_page.querySelector(".selection");
-            const boxes = [...ref_page.querySelectorAll(".item")];
+            const boxes = [...ref_page.querySelectorAll(ref.options.item_selector)];
 
             if (ref.shiftDown){
-                e.target.closest(".item").classList.toggle("selected");
-            }else{
-                /*
-                document.querySelectorAll(".item.selected").forEach(item=>{
-                    item.classList.remove("selected");
-                })
-                e.target.closest(".item").classList.add("selected");
-                */
+                e.target.closest(ref.options.item_selector).classList.toggle("selected");
             }
 
             if (rect) {
@@ -671,7 +666,7 @@ class pageDesigner {
         var page_width = page_bounds.width;
 
         this.items = [];
-        this.page.querySelectorAll(".item").forEach(item => {
+        this.page.querySelectorAll(this.options.item_selector).forEach(item => {
 
             var bounds = item.getBoundingClientRect();
             var x = Math.round(item.dataset.x);
