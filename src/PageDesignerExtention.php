@@ -12,15 +12,8 @@ use OpenAdmin\Admin\PageDesigner\PageDesigner;
 class PageDesignerExtention extends Extension
 {
     /**
-     * PageDesigner constructor.
-     *
-     * @param null $file
+     * Boot PageDesigner.
      */
-    public function __construct()
-    {
-    }
-
-
     public static function boot()
     {
         static::registerRoutes();
@@ -45,7 +38,7 @@ class PageDesignerExtention extends Extension
         parent::routes(function ($router) {
             /* @var \Illuminate\Routing\Router $router */
             $router->get('page-designer', 'OpenAdmin\Admin\PageDesigner\PageDesignerController@index')->name('page-designer-index');
-            $router->post('page-designer/save', 'OpenAdmin\Admin\PageDesigner\PageDesignerController@save')->name('page-designer-file');
+            $router->post('page-designer/save', 'OpenAdmin\Admin\PageDesigner\PageDesignerController@save')->name('page-designer-save');
         });
     }
 

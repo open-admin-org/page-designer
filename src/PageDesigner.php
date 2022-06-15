@@ -4,6 +4,7 @@ namespace OpenAdmin\Admin\PageDesigner;
 
 use Illuminate\Support\Str;
 use OpenAdmin\Admin\PageDesigner\Traits\PageDesignItem;
+use OpenAdmin\Admin\PageDesigner\PageDesignerExtention;
 
 /**
  * Class PageDesigner.

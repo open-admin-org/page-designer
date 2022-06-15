@@ -18,54 +18,24 @@ trait PageDesignItem
         });
     }
 
-    /**
-     * Index interface.
-     *
-     * @param Content $content
-     *
-     * @return Content
-     */
     public function index(Content $content)
     {
         $content->addBodyClass("hide-nav  white-bg");
         return parent::index($content);
     }
 
-    /**
-     * Show interface.
-     *
-     * @param mixed   $id
-     * @param Content $content
-     *
-     * @return Content
-     */
     public function show($id, Content $content)
     {
         $content->addBodyClass("hide-nav  white-bg");
         return parent::show($content);
     }
 
-    /**
-     * Edit interface.
-     *
-     * @param mixed   $id
-     * @param Content $content
-     *
-     * @return Content
-     */
     public function edit($id, Content $content)
     {
         $content->addBodyClass("hide-nav  white-bg");
         return parent::edit($id, $content);
     }
 
-    /**
-     * Create interface.
-     *
-     * @param Content $content
-     *
-     * @return Content
-     */
     public function create(Content $content)
     {
         $content->addBodyClass("hide-nav white-bg");
