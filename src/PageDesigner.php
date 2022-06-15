@@ -24,7 +24,7 @@ class PageDesigner
     public function __construct($set_config = [])
     {
         $default = [
-            "snap"=>40
+            'snap'=> 40,
         ];
         $this->config = (array) PageDesignerExtention::config();
         $this->config = array_merge($default, $this->config, $set_config);

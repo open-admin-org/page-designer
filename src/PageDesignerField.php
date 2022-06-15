@@ -12,12 +12,13 @@ class PageDesignerField extends Textarea
 
     public function snap($pixels = 40)
     {
-        return $this->config(["snap"=>intval($pixels)]);
+        return $this->config(['snap'=>intval($pixels)]);
     }
 
     public function config($config = [])
     {
         $this->config = array_merge($config, $this->config);
+
         return $this;
     }
 
