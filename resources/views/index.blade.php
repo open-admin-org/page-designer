@@ -2,7 +2,7 @@
     <div class="col-md-9" style="width:1010px !important;min-width:1010px;">
 
         <div class="card-header with-border d-flex">
-            <h3 class="card-title">Page Deisgner</h3>
+            <h3 class="card-title">Page Designer</h3>
             <div id="tips" class="ms-auto"></div>
         </div>
 
