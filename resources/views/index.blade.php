@@ -35,7 +35,7 @@
             <div class="card-body no-padding" id="page-drop">
                 <div class="position-sticky sticky-top" style="padding-top:4.1rem;">
                 @foreach($item_types as $item_type)
-                <div class="item drop {{$item_type['type']}}" draggable="true" data-type="{{$item_type['type']}}">{{$item_type['title']}} </div>
+                <div class="item drop {{$item_type['type']}}" draggable="true" data-type="{{$item_type['type']}}"><span class="icon {{$item_type['icon']}}"></span>{{$item_type['title']}} </div>
                 @endforeach
                 </div>
             </div>

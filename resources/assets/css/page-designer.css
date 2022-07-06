@@ -32,6 +32,9 @@
     box-sizing: border-box;
     border-radius:.25rem;
 }
+.pds .item.drop .icon{
+    margin-right:0.5rem;
+}
 
 .pds .item .item-nav{
     padding:10px;
