@@ -15,6 +15,9 @@ class PageDesigner
     public $doc;
     public $config = [];
     public $script = [];
+    public $page_designer_id;
+    public $scripts;
+    public $item_data;
 
     /**
      * PageDesigner constructor.
