@@ -2,7 +2,13 @@
     "name": "open-admin-ext/page-designer",
     "description": "Page designer for open admin",
     "type": "library",
-    "keywords": ["open-admin", "page", "designer","free","random"],
+    "keywords": [
+        "open-admin",
+        "page",
+        "designer",
+        "free",
+        "random"
+    ],
     "homepage": "https://github.com/open-admin-org/page-designer",
     "license": "MIT",
     "authors": [
